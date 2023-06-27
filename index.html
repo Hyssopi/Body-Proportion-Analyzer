@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <link href="styles/styles.css" rel="stylesheet"/>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Body Proportion Analyzer</title>
+    </head>
+
+    <body>
+        <div style="display: flex;">
+            <div style="display: flex; flex-direction: column; align-content: space-between; line-height: 45px;">
+                <div><b>Note</b>: Calculated values are estimates, especially when the body is leaning.</div>
+                <div><hr></div>
+                <div id="step_paste">Step 1: Click on the rectangle and <b>Ctrl+V</b> to paste image</div>
+                <div id="step_start">Step 2: Click the <b>Start</b> button</div>
+                <div id="step_head_top">Step 3: Click the <b>top</b> part of the <b>head</b></div>
+                <div id="step_head_bottom">Step 4: Click the <b>bottom</b> part of the <b>head</b></div>
+                <div id="step_head_left">Step 5: Click the <b>left</b> side of the <b>head</b></div>
+                <div id="step_head_right">Step 6: Click the <b>right</b> side of the <b>head</b></div>
+                <div id="step_pubicBone">Step 7: Click the <b>pubic bone</b></div>
+                <div id="step_heel">Step 8: Click the <b>heel</b></div>
+                <div id="step_end">Step 9: (Optional) Click the <b>Start</b> button to redo</div>
+              	<button id="start">Start</button>
+                <div>Calculation Results:</div>
+                <div id="result_body">Body: X</div>
+                <div id="result_leg">Leg: X</div>
+                <div id="result_total">Total: X</div>
+            </div>
+            <canvas id="canvas_main" width="100" height="100"></canvas>
+        </div>
+    </body>
+
+    <script src="build/dist/body-proportion-analyzer.js" type="module"></script>
+</html>

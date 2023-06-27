@@ -1,0 +1,30 @@
+body
+{
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    margin: 0px;
+}
+
+button
+{
+    background-color: blue;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    opacity: 0.7;
+    border: 1px solid black;
+    display: inline-block;
+    transition: 0.3s;
+    padding: 10px 0px;
+}
+
+button:hover
+{
+    opacity: 1;
+}
+
+canvas
+{
+    border: 1px solid black;
+}
