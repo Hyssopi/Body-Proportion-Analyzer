@@ -236,7 +236,7 @@ button.addEventListener('click', (e) => {
     ctx.drawImage(cachedImage, 0, 0);
 });
 // State
-const canvas = document.getElementById('my_canvas');
+const canvas = document.getElementById('canvas_main');
 const ctx = canvas.getContext('2d');
 const referencePoints = {
     [ReferencePoint.Head_Top]: { x: 0, y: 0 },
