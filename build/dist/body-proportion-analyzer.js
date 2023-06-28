@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Reference point.
+ */
 var ReferencePoint;
 (function (ReferencePoint) {
     ReferencePoint[ReferencePoint["Head_Top"] = 0] = "Head_Top";
@@ -8,6 +11,9 @@ var ReferencePoint;
     ReferencePoint[ReferencePoint["PubicBone"] = 4] = "PubicBone";
     ReferencePoint[ReferencePoint["Heel"] = 5] = "Heel";
 })(ReferencePoint || (ReferencePoint = {}));
+/**
+ * Step.
+ */
 var Step;
 (function (Step) {
     Step[Step["Paste"] = 0] = "Paste";
@@ -20,10 +26,19 @@ var Step;
     Step[Step["Heel"] = 7] = "Heel";
     Step[Step["End"] = 8] = "End";
 })(Step || (Step = {}));
+/**
+ * Create the new image and cache it.
+ * @param {HTMLCanvasElement} canvas Canvas.
+ * @param {string} source Paste image source.
+ * @param {boolean} resize Whether to resize the canvas or not.
+ */
 const paste_createImage = (canvas, source, resize) => {
     const ctx = canvas.getContext('2d');
     const pastedImage = new Image();
     pastedImage.src = source;
+    /**
+     * Draw image on canvas once the new image has been created.
+     */
     pastedImage.onload = function () {
         if (resize) {
             canvas.width = pastedImage.width;
@@ -38,6 +53,13 @@ const paste_createImage = (canvas, source, resize) => {
     };
     cachedImage = pastedImage;
 };
+/**
+ * Process the paste event.
+ * @param {ClipboardEvent} e Clipboard event.
+ * @param {Window} window Window.
+ * @param {HTMLCanvasElement} canvas Canvas.
+ * @param {boolean} resize Whether to resize the canvas or not.
+ */
 const paste_process = (e, window, canvas, resize) => {
     if (e.clipboardData) {
         const items = e.clipboardData.items;
@@ -61,6 +83,12 @@ const paste_process = (e, window, canvas, resize) => {
         }
     }
 };
+/**
+ * Setup paste listener.
+ * @param {Window} window Window.
+ * @param {HTMLCanvasElement} canvas Canvas.
+ * @param {boolean} resize Whether to resize the canvas or not.
+ */
 const paste_setup = (window, canvas, resize) => {
     document.addEventListener('paste', function (e) {
         paste_process(e, window, canvas, resize);
@@ -68,18 +96,33 @@ const paste_setup = (window, canvas, resize) => {
         text_update(currentStep, referencePoints);
     }, false);
 };
+/**
+ * Update texts.
+ * @param {Step} state Current step state.
+ * @param {{ [key in ReferencePoint]: Point }} referencePoints Reference point state.
+ */
 const text_update = (state, referencePoints) => {
     document.getElementById('step_paste').style.color = state === Step.Paste ? 'black' : 'lightgrey';
     document.getElementById('step_start').style.color = state === Step.Start ? 'black' : 'lightgrey';
-    document.getElementById('step_head_top').style.color = state === Step.Head_Top ? 'black' : 'lightgrey';
-    document.getElementById('step_head_bottom').style.color = state === Step.Head_Bottom ? 'black' : 'lightgrey';
-    document.getElementById('step_head_left').style.color = state === Step.Head_Left ? 'black' : 'lightgrey';
-    document.getElementById('step_head_right').style.color = state === Step.Head_Right ? 'black' : 'lightgrey';
-    document.getElementById('step_pubicBone').style.color = state === Step.PubicBone ? 'black' : 'lightgrey';
+    document.getElementById('step_head_top').style.color =
+        state === Step.Head_Top ? 'black' : 'lightgrey';
+    document.getElementById('step_head_bottom').style.color =
+        state === Step.Head_Bottom ? 'black' : 'lightgrey';
+    document.getElementById('step_head_left').style.color =
+        state === Step.Head_Left ? 'black' : 'lightgrey';
+    document.getElementById('step_head_right').style.color =
+        state === Step.Head_Right ? 'black' : 'lightgrey';
+    document.getElementById('step_pubicBone').style.color =
+        state === Step.PubicBone ? 'black' : 'lightgrey';
     document.getElementById('step_heel').style.color = state === Step.Heel ? 'black' : 'lightgrey';
     document.getElementById('step_end').style.color = state >= Step.End ? 'black' : 'lightgrey';
-    result_calculate(state, referencePoints);
+    result_update(state, referencePoints);
 };
+/**
+ * Calculate the formatted results.
+ * @param {{ [key in ReferencePoint]: Point }} referencePoints Reference point state.
+ * @returns {{string, string, string, string, string}} Calculated formatted results.
+ */
 const result_calculate_formatted = (referencePoints) => {
     const head_top_y = referencePoints[ReferencePoint.Head_Top].y;
     const head_height_pixel = referencePoints[ReferencePoint.Head_Bottom].y - referencePoints[ReferencePoint.Head_Top].y;
@@ -92,19 +135,27 @@ const result_calculate_formatted = (referencePoints) => {
         body_pixel: (body_pixel / head_height_pixel).toFixed(1),
         leg_pixel: (leg_pixel / head_height_pixel).toFixed(1),
         total_pixel: (total_pixel / head_height_pixel).toFixed(1),
-        body_percent: Math.round(body_pixel * 100 / total_pixel) + '%',
-        leg_percent: Math.round(leg_pixel * 100 / total_pixel) + '%',
+        body_percent: Math.round((body_pixel * 100) / total_pixel) + '%',
+        leg_percent: Math.round((leg_pixel * 100) / total_pixel) + '%',
     };
 };
-const result_calculate = (state, referencePoints) => {
+/**
+ * Update results on the text.
+ * @param {Step} state Current step state.
+ * @param {{ [key in ReferencePoint]: Point }} referencePoints Reference point state.
+ */
+const result_update = (state, referencePoints) => {
     document.getElementById('result_body').style.color = state === Step.End ? 'black' : 'lightgrey';
     document.getElementById('result_leg').style.color = state === Step.End ? 'black' : 'lightgrey';
     document.getElementById('result_total').style.color = state === Step.End ? 'black' : 'lightgrey';
     if (state === Step.End) {
-        var formattedResults = result_calculate_formatted(referencePoints);
-        document.getElementById('result_body').innerHTML = '<b>Body</b>: ' + formattedResults.body_pixel + ' heads (' + formattedResults.body_percent + ')';
-        document.getElementById('result_leg').innerHTML = '<b>Leg</b>: ' + formattedResults.leg_pixel + ' heads (' + formattedResults.leg_percent + ')';
-        document.getElementById('result_total').innerHTML = '<b>Total</b>: ' + formattedResults.total_pixel + ' heads';
+        const formattedResults = result_calculate_formatted(referencePoints);
+        document.getElementById('result_body').innerHTML =
+            '<b>Body</b>: ' + formattedResults.body_pixel + ' heads (' + formattedResults.body_percent + ')';
+        document.getElementById('result_leg').innerHTML =
+            '<b>Leg</b>: ' + formattedResults.leg_pixel + ' heads (' + formattedResults.leg_percent + ')';
+        document.getElementById('result_total').innerHTML =
+            '<b>Total</b>: ' + formattedResults.total_pixel + ' heads';
     }
     else {
         document.getElementById('result_body').innerHTML = '<b>Body</b>: N/A';
@@ -112,11 +163,17 @@ const result_calculate = (state, referencePoints) => {
         document.getElementById('result_total').innerHTML = '<b>Total</b>: N/A';
     }
 };
+/**
+ * Setup click.
+ * @param {HTMLCanvasElement} canvas Canvas.
+ * @param {{ [key in ReferencePoint]: Point }} referencePoints Reference point state.
+ */
 const click_setup = (canvas, referencePoints) => {
     document.addEventListener('mousedown', (e) => {
         const bounds = canvas.getBoundingClientRect();
         const x = e.pageX - bounds.left - scrollX;
         const y = e.pageY - bounds.top - scrollY;
+        // Check that clicks are within canvas
         if (e.pageY >= bounds.top && e.pageY <= bounds.bottom && e.pageX >= bounds.left && e.pageX <= bounds.right) {
             if (currentStep === Step.Head_Top) {
                 referencePoints[ReferencePoint.Head_Top] = { x: x, y: y };
@@ -166,9 +223,10 @@ const click_setup = (canvas, referencePoints) => {
                 for (let i = 0; i < Math.ceil(total_pixel / head_height_pixel); i++) {
                     ctx.putImageData(head_imageData, ctx.canvas.width - head_width_pixel, head_top_y + head_height_pixel * i);
                 }
-                // Add text on canvas
-                var formattedResults = result_calculate_formatted(referencePoints);
+                // Draw texts and results on canvas
+                const formattedResults = result_calculate_formatted(referencePoints);
                 const pubicBone_y = referencePoints[ReferencePoint.PubicBone].y;
+                // Body
                 ctx.beginPath();
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = 'blue';
@@ -189,6 +247,7 @@ const click_setup = (canvas, referencePoints) => {
                 ctx.strokeText(formattedResults.body_percent, ctx.canvas.width - head_width_pixel - 15, (head_top_y + pubicBone_y) / 2 + 30);
                 ctx.fillStyle = 'blue';
                 ctx.fillText(formattedResults.body_percent, ctx.canvas.width - head_width_pixel - 15, (head_top_y + pubicBone_y) / 2 + 30);
+                // Leg
                 ctx.beginPath();
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = 'green';
@@ -209,6 +268,7 @@ const click_setup = (canvas, referencePoints) => {
                 ctx.strokeText(formattedResults.leg_percent, ctx.canvas.width - head_width_pixel - 20, (pubicBone_y + heel_y) / 2 + 30);
                 ctx.fillStyle = 'green';
                 ctx.fillText(formattedResults.leg_percent, ctx.canvas.width - head_width_pixel - 20, (pubicBone_y + heel_y) / 2 + 30);
+                // Total
                 ctx.beginPath();
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = 'orange';
