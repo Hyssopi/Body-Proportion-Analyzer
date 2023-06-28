@@ -1,5 +1,5 @@
 # Body Proportion Analyzer
-Allows users to input character images and the Body Proportion Analyzer will calculate the leg-to-body ratio.
+Calculate the leg-to-body ratio given the input character image and user inputs.
 
 ![splash](images/splash.png)
 
