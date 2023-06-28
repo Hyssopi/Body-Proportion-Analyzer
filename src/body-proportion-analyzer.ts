@@ -225,7 +225,7 @@ const click_setup = (canvas: HTMLCanvasElement, referencePoints: { [key in Refer
         const x = e.pageX - bounds.left - scrollX;
         const y = e.pageY - bounds.top - scrollY;
 
-        // Check that clicks are within canvas
+        // Check that clicks are within the canvas
         if (e.pageY >= bounds.top && e.pageY <= bounds.bottom && e.pageX >= bounds.left && e.pageX <= bounds.right) {
             if (currentStep === Step.Head_Top) {
                 referencePoints[ReferencePoint.Head_Top] = { x: x, y: y };
