@@ -4,7 +4,7 @@ Calculate the leg-to-body ratio given the input character image and user inputs.
 ![splash](images/splash.png)
 
 ## Working Demo
-TODO
+https://www.youtube.com/watch?v=qlQGHstHjL4
 
 ## Try It Out
 https://hyssopi.github.io/Body-Proportion-Analyzer/
